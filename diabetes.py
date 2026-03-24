@@ -15,7 +15,7 @@ assert tf.__version__ >= "2.0"
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 CSV_PATH = os.path.join(BASE_DIR, 'diabetes.csv')
-MODEL_PATH = os.path.join(BASE_DIR, 'pima_model.h5')
+MODEL_PATH = os.path.join(BASE_DIR, 'pima_model.keras')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
