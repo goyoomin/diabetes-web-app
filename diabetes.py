@@ -21,6 +21,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
 bootstrap5 = Bootstrap5(app)
 
+DATA = pd.read_csv(CSV_PATH, sep=',')
+SCALER = MinMaxScaler()
+SCALER.fit(DATA.values[:, 0:8])
 MODEL = keras.models.load_model(MODEL_PATH, compile=False)
 
 class LabForm(FlaskForm):
@@ -52,26 +55,12 @@ def lab():
                             float(form.bmi.data),
                             float(form.dpf.data),
                             float(form.age.data)]])
-        print(X_test.shape)
-        print(X_test)
-
-        # get the data for the diabetes data.
-        data = pd.read_csv(CSV_PATH, sep=',')
-
-        # extract the X and y from the imported data
-        X = data.values[:, 0:8]
-        y = data.values[:, 8]
-
-        # use MinMaxScaler to fit a scaler object
-        scaler = MinMaxScaler()
-        scaler.fit(X)
-
         # min max scale the data for the prediction
-        X_test = scaler.transform(X_test)
+        X_test = SCALER.transform(X_test)
 
         # 모델 로드
         # evaluate model
-        prediction = MODEL.predict(X_test)
+        prediction = MODEL(X_test, training=False).numpy()
         res = prediction[0][0]
         res = np.round(res, 2)
         res = (float)(np.round(res * 100))
