@@ -1,5 +1,4 @@
 import numpy as np
-import os
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from flask import Flask, render_template
@@ -12,10 +11,6 @@ from wtforms.validators import DataRequired
 import tensorflow as tf
 from tensorflow import keras
 assert tf.__version__ >= "2.0"
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-CSV_PATH = os.path.join(BASE_DIR, 'diabetes.csv')
-MODEL_PATH = os.path.join(BASE_DIR, 'pima_model.h5')
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'hard to guess string'
@@ -54,7 +49,7 @@ def lab():
         print(X_test)
 
         # get the data for the diabetes data.
-        data = pd.read_csv(CSV_PATH, sep=',')
+        data = pd.read_csv('diabetes.csv', sep=',')
 
         # extract the X and y from the imported data
         X = data.values[:, 0:8]
@@ -68,7 +63,7 @@ def lab():
         X_test = scaler.transform(X_test)
 
         # 모델 로드
-        model = keras.models.load_model(MODEL_PATH)
+        model = keras.models.load_model('pima_model.h5')
 
         # evaluate model
         prediction = model.predict(X_test)
